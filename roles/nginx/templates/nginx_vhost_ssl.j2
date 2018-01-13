@@ -1,0 +1,109 @@
+# {{ ansible_managed }}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name {{ instance_name }};
+
+  ####################
+  # SECURITY WARNING #
+  ####################
+  #
+  # Providing a state of the art TLS configuration
+  # is beyond the scope of this documentation.
+  #
+  # You need to replace this comment with a proper
+  # ssl configuration template for nginx.
+  #
+  # If you don't know were to start, you can get one here :
+  # https://mozilla.github.io/server-side-tls/ssl-config-generator/
+  #
+  # This configuration file won't work without ssl configuration directives.
+
+  server_tokens off;
+  add_header X-Frame-Options SAMEORIGIN;
+  add_header X-Content-Type-Options nosniff;
+  add_header X-XSS-Protection "1; mode=block";
+  add_header X-Content-Type-Options nosniff;
+  add_header Strict-Transport-Security "max-age=63072000; preload";
+
+  ssl on;
+  ssl_certificate /etc/ssl/{{ instance_name }}.fullchain.pem;
+  ssl_certificate_key /etc/ssl/{{ instance_name }}.key;
+
+  ssl_dhparam /etc/ssl/dhparams.pem;
+
+  ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+  ssl_protocols TLSv1.2;
+  ssl_prefer_server_ciphers on;
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_tickets off;
+  ssl_stapling on;
+  ssl_stapling_verify on;
+
+  keepalive_timeout    70;
+  sendfile             on;
+  client_max_body_size 0;
+
+  root /home/_mastodon/live/public;
+
+  gzip on;
+  gzip_disable "msie6";
+  gzip_vary on;
+  gzip_proxied any;
+  gzip_comp_level 6;
+  gzip_buffers 16 8k;
+  gzip_http_version 1.1;
+  gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+
+  location / {
+    try_files $uri @proxy;
+  }
+
+  location ~ ^/(emoji|packs|system/accounts/avatars|system/media_attachments/files) {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+    try_files $uri @proxy;
+  }
+
+  location /sw.js {
+    add_header Cache-Control "public, max-age=0";
+    try_files $uri @proxy;
+  }
+
+  location @proxy {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Proxy "";
+    proxy_pass_header Server;
+
+    proxy_pass http://127.0.0.1:3000;
+    proxy_buffering off;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    tcp_nodelay on;
+  }
+
+  location /api/v1/streaming {
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header Proxy "";
+
+    proxy_pass http://127.0.0.1:4000;
+    proxy_buffering off;
+    proxy_redirect off;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+
+    tcp_nodelay on;
+  }
+
+  error_page 500 501 502 503 504 /500.html;
+}

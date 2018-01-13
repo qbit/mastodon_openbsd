@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+authority letsencrypt {
+        api url "https://acme-v01.api.letsencrypt.org/directory"
+        account key "/etc/acme/letsencrypt-privkey.pem"
+}
+
+domain {{ instance_name }} {
+        domain key "/etc/ssl/private/{{ instance_name }}.key"
+        domain certificate "/etc/ssl/{{ instance_name }}.crt"
+        domain full chain certificate "/etc/ssl/{{ instance_name }}.fullchain.pem"
+        sign with letsencrypt
+        challengedir "/home/_mastodon/live/public/.well-known/acme-challenge"
+}

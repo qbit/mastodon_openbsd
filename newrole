@@ -1,0 +1,12 @@
+#!/bin/sh
+
+R=$1
+
+if [ ! -d roles/${R} ]; then
+	mkdir roles/${R}
+	mkdir -p roles/${R}/{files,handlers,tasks,templates,vars}
+else
+	echo "Role already exists!"
+	exit 1;
+fi
+

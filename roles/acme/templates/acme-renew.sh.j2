@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -eu
+
+RELOAD=1
+
+OPTIONS="-AD"
+
+acme-client ${OPTIONS} {{ instance_name }} && RELOAD=0
+
+if [ $RELOAD -eq 0 ]; then
+	/etc/rc.d/nginx reload
+fi

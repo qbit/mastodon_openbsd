@@ -1,0 +1,76 @@
+---
+- name: Create nginx directories
+  tags:
+    - nginx
+  file:
+    path: /etc/nginx/{{ item }}
+    owner: root
+    state: directory
+    group: wheel
+  with_items:
+    - sites-enabled
+    - sites-available
+
+- name: dhparams (4096)
+  copy:
+    src: "dhparams.pem"
+    dest: "/etc/ssl/dhparams.pem"
+  tags:
+    - vhost
+    - nginx
+
+- name: Create nginx.conf
+  tags:
+    - nginx
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Create vhost entry
+  tags:
+    - nginx
+  template:
+    src: nginx_vhost.j2
+    dest: /etc/nginx/sites-available/mastodon.conf
+  notify:
+    - restart nginx
+
+- name: Create ssl vhost entry
+  tags:
+    - nginx
+  template:
+    src: nginx_vhost_ssl.j2
+    dest: /etc/nginx/sites-available/mastodon_ssl.conf
+  notify:
+    - restart nginx
+
+- name: Enable mastodon vhost
+  tags:
+    - nginx
+  file:
+    dest: /etc/nginx/sites-enabled/mastodon.conf
+    src: /etc/nginx/sites-available/mastodon.conf
+    state: link
+  notify:
+    - restart nginx
+
+- name: Enable nginx
+  tags:
+    - nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: started
+- name: Run acme client
+  command: /root/acme-renew.sh
+
+- name: Enable mastodon ssl vhost
+  tags:
+    - nginx
+  file:
+    dest: /etc/nginx/sites-enabled/mastodon_ssl.conf
+    src: /etc/nginx/sites-available/mastodon_ssl.conf
+    state: link
+  notify:
+    - restart nginx
+

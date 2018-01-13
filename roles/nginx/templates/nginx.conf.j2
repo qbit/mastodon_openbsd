@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+
+worker_processes	5;
+
+events {
+  worker_connections	1024;
+}
+
+http {
+  gzip				on;
+  include			mime.types;
+  types_hash_max_size		2048;
+  server_names_hash_bucket_size	64;
+
+  client_max_body_size	10M;
+
+  limit_req_zone $binary_remote_addr	zone=perip:1m		rate=2r/s;
+  limit_req_zone $server_name		zone=perserver:1m	rate=2r/s;
+
+  limit_req zone=perip	burst=15;
+
+  include /etc/nginx/sites-enabled/*;
+}

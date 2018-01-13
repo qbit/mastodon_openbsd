@@ -1,0 +1,13 @@
+---
+
+- name: setup acme-client.conf
+  template:
+    src: "acme-client.conf.j2"
+    dest: "/etc/acme-client.conf"
+
+- name: create acme-client renew script
+  template: src="acme-renew.sh.j2" dest="/root/acme-renew.sh" mode=0700 owner=root group=wheel
+
+- name: create acme-client renew cronjob
+  cron: name="acme renew" special_time=hourly job="/root/acme-renew.sh"
+

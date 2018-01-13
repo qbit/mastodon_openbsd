@@ -1,0 +1,28 @@
+---
+
+- name: Run initial config
+  file: name={{ postgres_datadir | default('/var/postgresql/data') }} state=directory owner=_postgresql group=_postgresql
+  register: made_pgdir
+
+- name: Init database
+  shell: "initdb -D {{ postgres_datadir | default('/var/postgresql/data') }} -E UTF8 -A md5  --auth-local=trust -U postgres"
+  become: true
+  become_user: _postgresql
+  become_method: su
+  args:
+    creates: "{{ postgres_datadir | default('/var/postgresql/data') }}/pg_hba.conf"
+
+- name: Enable postgresql
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create database
+  postgresql_db:
+    name: mastodon
+
+- name: Create database user
+  postgresql_user:
+    db: mastodon
+    name: mastodon

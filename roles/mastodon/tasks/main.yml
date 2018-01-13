@@ -1,0 +1,64 @@
+---
+
+- name: Install pre-reqs
+  tags:
+    - system
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - ImageMagick
+    - ffmpeg
+    - git
+    - gnupg-1.4.22p0
+    - nginx
+    - node
+    - postgresql-contrib
+    - postgresql-server
+    - protobuf
+    - redis
+    - ruby24-bundler
+    - py-psycopg2
+
+- name: Install "yarn" node.js package globally.
+  tags:
+    - system
+  npm:
+    name: yarn
+    global: yes
+
+- name: Add _mastodon user
+  tags:
+    - system
+  user:
+    name: _mastodon
+    shell: /sbin/nologin
+    state: present
+    group: daemon
+
+- name: Copy github's gpg pubkey
+  tags:
+    - code
+  copy:
+    src: pubkey.asc
+    dest: /home/_mastodon/pubkey.asc
+    owner: _mastodon
+
+- name: Import github's gpg key
+  tags:
+    - code
+  become_user: "_mastodon"
+  command: 'gpg --import /home/_mastodon/pubkey.asc'
+  register: gpg_output
+  changed_when: "'imported: 1' in gpg_output.stderr"
+
+- name: Clone mastodon repo
+  tags:
+    - code
+  become_user: _mastodon
+  git:
+    repo: https://github.com/tootsuite/mastodon.git
+    dest: /home/_mastodon/live
+    verify_commit: true
+    version: v2.1.3
+
