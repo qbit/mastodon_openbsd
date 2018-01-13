@@ -9,16 +9,27 @@
   with_items:
     - ImageMagick
     - ffmpeg
+    - gcc
     - git
-    - gnupg-1.4.22p0
+    - gnupg-2.2.3
+    - icu4c
+    - libidn
     - nginx
     - node
     - postgresql-contrib
     - postgresql-server
     - protobuf
-    - redis
-    - ruby24-bundler
     - py-psycopg2
+    - redis
+    - ruby24-addressable
+    - ruby24-bundler
+    - ruby24-nokogiri
+    - ruby24-pg
+    - ruby24-puma
+    - ruby24-redis
+    - ruby24-redis-namespace
+    - ruby24-sanitize
+    - ruby24-sanitize
 
 - name: Install "yarn" node.js package globally.
   tags:
