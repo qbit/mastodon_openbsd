@@ -18,6 +18,12 @@
     state: started
     enabled: yes
 
+- name: Install pg_hba.conf
+  copy:
+    src: pg_hba.conf
+    dest: "{{ postgres_datadir | default('/var/postgresql/data') }}/pg_hba.conf"
+  notify: restart postgres
+
 - name: Create database
   postgresql_db:
     name: mastodon
