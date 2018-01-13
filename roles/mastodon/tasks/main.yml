@@ -43,33 +43,68 @@
     - system
   user:
     name: _mastodon
-    shell: /sbin/nologin
+    shell: /bin/ksh
     state: present
     group: daemon
+
+- name: Create .gitconfig
+  copy:
+    dest: /var/www/_mastodon/.gitconfig
+    owner: _mastodon
+    group: daemon
+    content: |
+            [gpg]
+                program = /usr/local/bin/gpg2
+            [transfer]
+                fsckobjects = true
+            [fetch]
+                fsckobjects = true
 
 - name: Copy github's gpg pubkey
   tags:
     - code
   copy:
     src: pubkey.asc
-    dest: /home/_mastodon/pubkey.asc
+    dest: /var/www/_mastodon/pubkey.asc
     owner: _mastodon
 
 - name: Import github's gpg key
   tags:
     - code
-  become_user: "_mastodon"
-  command: 'gpg --import /home/_mastodon/pubkey.asc'
+  become: true
+  become_method: su
+  become_user: _mastodon
+  command: 'gpg2 --import /var/www/_mastodon/pubkey.asc'
   register: gpg_output
   changed_when: "'imported: 1' in gpg_output.stderr"
 
 - name: Clone mastodon repo
   tags:
     - code
+  become: true
+  become_method: su
   become_user: _mastodon
   git:
     repo: https://github.com/tootsuite/mastodon.git
-    dest: /home/_mastodon/live
+    dest: /var/www/_mastodon/live
     verify_commit: true
     version: v2.1.3
 
+- name: Run Bundle
+  tags:
+    - bundle
+  become: true
+  become_method: su
+  become_user: "_mastodon"
+  command: "bundle24 install --deployment --without development test"
+  args:
+    chdir: /var/www/_mastodon/live
+
+- name: Run Yarn
+  become: true
+  become_method: su
+  become_user: "_mastodon"
+  ignore_errors: yes
+  command: "yarn install --pure-lockfile"
+  args:
+    chdir: /var/www/_mastodon/live
