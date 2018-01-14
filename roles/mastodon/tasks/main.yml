@@ -9,6 +9,8 @@
     state: installed
   with_items:
     - ImageMagick
+    - autoconf-2.69p2
+    - automake-1.15.1
     - ffmpeg
     - gcc
     - git
@@ -23,6 +25,12 @@
     - ruby24-nokogiri
     - ruby24-puma
     - ruby24-sanitize
+
+- name: Make python symlink
+  file:
+    state: link
+    src: /usr/local/bin/python2.7
+    dest: /usr/local/bin/python
 
 - name: Configure login.conf
   tags:
@@ -51,6 +59,19 @@
     home: /var/www/_mastodon
     state: present
     group: daemon
+
+- name: Add profile for _mastodon
+  copy:
+    dest: /var/www/_mastodon/.profile
+    owner: _mastodon
+    group: daemon
+    content: |
+            PATH=$HOME/bin:/bin:/sbin:/usr/bin:/usr/sbin:/usr/X11R6/bin:/usr/local/bin:/usr/local/sbin:/usr/games:.
+            export PATH HOME TERM
+            CC=/usr/bin/clang
+            CXX=/usr/bin/clang++
+            AUTOCONF_VERSION=2.69
+            AUTOMAKE_VERSION=1.15
 
 - name: Create .gitconfig
   copy:
