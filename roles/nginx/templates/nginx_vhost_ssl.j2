@@ -29,7 +29,7 @@ server {
 
   ssl on;
   ssl_certificate /etc/ssl/{{ instance_name }}.fullchain.pem;
-  ssl_certificate_key /etc/ssl/{{ instance_name }}.key;
+  ssl_certificate_key /etc/ssl/private/{{ instance_name }}.key;
 
   ssl_dhparam /etc/ssl/dhparams.pem;
 
@@ -45,7 +45,7 @@ server {
   sendfile             on;
   client_max_body_size 0;
 
-  root /home/_mastodon/live/public;
+  root /_mastodon/live/public;
 
   gzip on;
   gzip_disable "msie6";
