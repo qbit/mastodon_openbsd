@@ -3,6 +3,7 @@
 - name: Install pre-reqs
   tags:
     - system
+    - pkgs
   package:
     name: "{{ item }}"
     state: installed
@@ -44,6 +45,7 @@
   user:
     name: _mastodon
     shell: /bin/ksh
+    home: /var/www/_mastodon
     state: present
     group: daemon
 
@@ -93,6 +95,7 @@
 - name: Run Bundle
   tags:
     - bundle
+    - deps
   become: true
   become_method: su
   become_user: "_mastodon"
@@ -101,6 +104,9 @@
     chdir: /var/www/_mastodon/live
 
 - name: Run Yarn
+  tags:
+    - bundle
+    - deps
   become: true
   become_method: su
   become_user: "_mastodon"
@@ -108,3 +114,45 @@
   command: "yarn install --pure-lockfile"
   args:
     chdir: /var/www/_mastodon/live
+
+- name: Create mastodon env.production file
+  tags:
+    - secrets
+    - env
+    - rake
+  template:
+    src: env.production.j2
+    dest: /var/www/_mastodon/live/.env.production
+    owner: _mastodon
+    group: www
+    mode: 0640
+
+- name: Copy rake helper script
+  copy:
+    src: rake_runner.sh
+    dest: /var/www/_mastodon/rake_runner.sh
+    mode: 0755
+    owner: "_mastodon"
+
+- name: Setup DB
+  tags:
+    - db
+  become: true
+  become_method: su
+  become_user: "_mastodon"
+  shell: "/var/www/_mastodon/rake_runner.sh db"
+  args:
+    chdir: /var/www/_mastodon/live
+    creates: /var/www/_mastodon/db
+
+- name: Setup JS / CSS
+  tags:
+    - cssjs
+  become: true
+  become_method: su
+  become_user: "_mastodon"
+  shell: "/var/www/_mastodon/rake_runner.sh cssjs"
+  args:
+    chdir: /var/www/_mastodon/live
+    creates: /var/www/_mastodon/cssjs
+
