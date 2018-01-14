@@ -82,7 +82,7 @@
     repo: https://github.com/tootsuite/mastodon.git
     dest: /var/www/_mastodon/live
     verify_commit: true
-    version: v2.1.3
+    version: "{{ mastodon_release | default('master') }}"
 
 - name: Run Bundle
   tags:
