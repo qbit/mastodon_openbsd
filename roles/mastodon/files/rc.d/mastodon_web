@@ -1,0 +1,22 @@
+#!/bin/ksh
+
+env="RAILS_ENV=production PORT=3000"
+datadir="/var/www/_mastodon/live"
+
+daemon="/usr/local/bin/bundle24"
+daemon_flags="exec puma -C ${datadir}/config/puma.rb"
+daemon_user="_mastodon"
+
+. /etc/rc.d/rc.subr
+
+rc_start() {
+	cd ${datadir}
+	su ${daemon_user} -c "env ${env} ${daemon} ${daemon_flags}"
+}
+
+pexp="ruby24: puma:"
+
+rc_reload=NO
+rc_bg=YES
+
+rc_cmd $1
