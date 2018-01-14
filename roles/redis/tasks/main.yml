@@ -1,4 +1,15 @@
 ---
+- name: Install redis
+  tags:
+    - system
+    - pkgs
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - redis
+    - ruby24-redis
+    - ruby24-redis-namespace
 
 - name: enable redis
   service:

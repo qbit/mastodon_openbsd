@@ -17,19 +17,11 @@
     - libidn
     - nginx
     - node
-    - postgresql-contrib
-    - postgresql-server
     - protobuf
-    - py-psycopg2
-    - redis
     - ruby24-addressable
     - ruby24-bundler
     - ruby24-nokogiri
-    - ruby24-pg
     - ruby24-puma
-    - ruby24-redis
-    - ruby24-redis-namespace
-    - ruby24-sanitize
     - ruby24-sanitize
 
 - name: Install "yarn" node.js package globally.

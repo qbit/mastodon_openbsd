@@ -1,5 +1,18 @@
 ---
 
+- name: Install PostgreSQL
+  tags:
+    - system
+    - pkgs
+  package:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - postgresql-server
+    - postgresql-contrib
+    - py-psycopg2
+    - ruby24-pg
+
 - name: Run initial config
   file: name={{ postgres_datadir | default('/var/postgresql/data') }} state=directory owner=_postgresql group=_postgresql
   register: made_pgdir

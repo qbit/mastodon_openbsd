@@ -3,8 +3,8 @@
 - name: Mastodon
   hosts: openbsd
   roles:
-    - { role: mastodon, tags: ["mastodon"] }
     - { role: redis, tags: ["redis", "mastodon"] }
     - { role: postgresql, tags: ["postgresql", "mastodon"] }
+    - { role: mastodon, tags: ["mastodon"] }
     - { role: nginx, tags: ["nginx", "mastodon"] }
     - { role: acme, tags: ["acme", "mastodon"] }
