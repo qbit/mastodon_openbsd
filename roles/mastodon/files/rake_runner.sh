@@ -8,7 +8,7 @@ case $1 in
 	"cssjs")
 		ulimit -n $(ulimit -Hn)
 		ulimit -d $(ulimit -Hd)
-		RAILS_ENV=production bundle24 exec rails assets:precompile && \
+		RAILS_ENV=production bundle24 exec rails assets:precompile ; \
 		touch /var/www/_mastodon/cssjs
 		;;
 	*)
