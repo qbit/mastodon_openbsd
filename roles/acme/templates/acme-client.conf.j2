@@ -10,5 +10,5 @@ domain {{ instance_name }} {
         domain certificate "/etc/ssl/{{ instance_name }}.crt"
         domain full chain certificate "/etc/ssl/{{ instance_name }}.fullchain.pem"
         sign with letsencrypt
-        challengedir "/home/_mastodon/live/public/.well-known/acme-challenge"
+        challengedir "/var/www/_mastodon/live/public/.well-known/acme-challenge"
 }
