@@ -24,6 +24,17 @@
     - ruby24-puma
     - ruby24-sanitize
 
+- name: Configure login.conf
+  tags:
+    - system
+    - login.conf
+  copy:
+    src: login.conf
+    dest: /etc/login.conf
+    owner: root
+    group: wheel
+    mode: 0644
+
 - name: Install "yarn" node.js package globally.
   tags:
     - system
