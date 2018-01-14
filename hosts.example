@@ -3,6 +3,12 @@ mdon.tapenet.org
 
 [openbsd:vars]
 instance_name="mdon.tapenet.org"
+instance_paperclip_secret=
+instance_secret_key_base=
+instance_otp_secret=
+instance_vapid_private_key=
+instance_vapid_public_key=
+
 ansible_ssh_user=root
 ansible_python_interpreter=/usr/local/bin/python2.7
 
