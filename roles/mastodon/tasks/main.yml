@@ -105,6 +105,7 @@
   command: "bundle24 install --deployment --without development test"
   args:
     chdir: /var/www/_mastodon/live
+    creates: /var/www/_mastodon/live/vendor/bundle/
 
 - name: Run Yarn
   tags:
@@ -117,6 +118,7 @@
   command: "yarn install --pure-lockfile"
   args:
     chdir: /var/www/_mastodon/live
+    creates: /var/www/_mastodon/live/node_modules
 
 - name: Create mastodon env.production file
   tags:
@@ -154,8 +156,26 @@
   become: true
   become_method: su
   become_user: "_mastodon"
+  ignore_errors: yes
   shell: "/var/www/_mastodon/rake_runner.sh cssjs"
   args:
     chdir: /var/www/_mastodon/live
     creates: /var/www/_mastodon/cssjs
 
+- name: Copy rc scripts
+  tags:
+    - rc
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/rc.d/{{ item }}"
+    mode: 0555
+  with_fileglob:
+    - "rc.d/*"
+
+- name: Enable rc scripts
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  with_fileglob:
+    - "rc.d/*"
