@@ -18,7 +18,6 @@
     - gnupg-2.2.3
     - icu4c
     - libidn
-    - nginx
     - node
     - protobuf
     - ruby24-addressable

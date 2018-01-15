@@ -1,4 +1,9 @@
 ---
+- name: Install nginx
+  package:
+    name: nginx
+    state: installed
+
 - name: Create nginx directories
   tags:
     - nginx
