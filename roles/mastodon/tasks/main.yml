@@ -11,6 +11,7 @@
     - ImageMagick
     - autoconf-2.69p2
     - automake-1.15.1
+    - bwm-ng
     - ffmpeg
     - gcc
     - git
@@ -50,6 +51,11 @@
     name: yarn
     global: yes
 
+- name: Add _mastodon group
+  group:
+    name: _mastodon
+    state: present
+
 - name: Add _mastodon user
   tags:
     - system
@@ -58,7 +64,7 @@
     shell: /bin/ksh
     home: /var/www/_mastodon
     state: present
-    group: daemon
+    group: _mastodon
 
 - name: Add profile for _mastodon
   copy:
@@ -72,6 +78,11 @@
             CXX=/usr/bin/clang++
             AUTOCONF_VERSION=2.69
             AUTOMAKE_VERSION=1.15
+            RAIL_ENV=production
+            NODE_ENV=production
+            DB_POOL=5
+
+            alias bundle=/usr/local/bin/bundle24
 
 - name: Create .gitconfig
   copy:
@@ -160,6 +171,13 @@
     mode: 0755
     owner: "_mastodon"
 
+- name: Copy tmux start script
+  copy:
+    src: starter.sh
+    dest: /var/www/_mastodon/starter.sh
+    mode: 0755
+    owner: "_mastodon"
+
 - name: Setup DB
   tags:
     - db
@@ -183,20 +201,20 @@
     chdir: /var/www/_mastodon/live
     creates: /var/www/_mastodon/cssjs
 
-- name: Copy rc scripts
-  tags:
-    - rc
-  copy:
-    src: "{{ item }}"
-    dest: "/etc/rc.d/{{ item }}"
-    mode: 0555
-  with_fileglob:
-    - "rc.d/*"
+#- name: Copy rc scripts
+#  tags:
+#    - rc
+#  copy:
+#    src: "{{ item }}"
+#    dest: "/etc/rc.d/{{ item }}"
+#    mode: 0555
+#  with_fileglob:
+#    - "rc.d/*"
 
-- name: Enable rc scripts
-  service:
-    name: "{{ item }}"
-    enabled: yes
-    state: started
-  with_fileglob:
-    - "rc.d/*"
+#- name: Enable rc scripts
+#  service:
+#    name: "{{ item }}"
+#    enabled: yes
+#    state: started
+#  with_fileglob:
+#    - "rc.d/*"
