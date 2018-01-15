@@ -195,6 +195,7 @@
   become_method: su
   become_user: "_mastodon"
   shell: "/var/www/_mastodon/rake_runner.sh cssjs"
+  ignore_errors: True
   args:
     chdir: /var/www/_mastodon/live
     creates: /var/www/_mastodon/cssjs

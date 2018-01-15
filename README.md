@@ -28,10 +28,17 @@ ansible-playbook site.yml
 
 # Status
 
-What needs work:
-- [ ] Deploying Mastodon
-  - [ ] Pre-generating VAPID keys
-  - [ ] RC scripts for clean startup
+- [X] Database install / configuration
+    - [X] Redis
+    - [X] PostgreSQL
+- [X] NGINX install / configuration
+    - [X] Acme SSL certs with automatic renewal.
+- [X] Mastodon install / configuration
+    - [ ] Rake tasks
+    - [X] verification of code via PGP and git (fsckobjects)
+    - [ ] Pre-generating Secrets
+    - [ ] Pre-generating VAPID keys
+    - [ ] RC scripts for clean startup
 
 # LICENSE
 
