@@ -138,7 +138,6 @@
     chdir: /var/www/_mastodon/live
     creates: /var/www/_mastodon/live/vendor/bundle/
 
-    #  OPTIONAL, you can safely ignore this error
 - name: Run Yarn
   tags:
     - bundle
