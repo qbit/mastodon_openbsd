@@ -139,6 +139,7 @@
     chdir: /var/www/_mastodon/live
     creates: /var/www/_mastodon/live/vendor/bundle/
 
+    #  OPTIONAL, you can safely ignore this error
 - name: Run Yarn
   tags:
     - bundle
@@ -146,11 +147,11 @@
   become: true
   become_method: su
   become_user: "_mastodon"
-  ignore_errors: yes
   command: "yarn install --pure-lockfile"
   args:
     chdir: /var/www/_mastodon/live
-    creates: /var/www/_mastodon/live/node_modules
+  register: yarn
+  failed_when: "'OPTIONAL, you can safely ignore this error' not in yarn.stdout"
 
 - name: Create mastodon env.production file
   tags:
@@ -195,26 +196,8 @@
   become: true
   become_method: su
   become_user: "_mastodon"
-  ignore_errors: yes
   shell: "/var/www/_mastodon/rake_runner.sh cssjs"
   args:
     chdir: /var/www/_mastodon/live
     creates: /var/www/_mastodon/cssjs
 
-#- name: Copy rc scripts
-#  tags:
-#    - rc
-#  copy:
-#    src: "{{ item }}"
-#    dest: "/etc/rc.d/{{ item }}"
-#    mode: 0555
-#  with_fileglob:
-#    - "rc.d/*"
-
-#- name: Enable rc scripts
-#  service:
-#    name: "{{ item }}"
-#    enabled: yes
-#    state: started
-#  with_fileglob:
-#    - "rc.d/*"
