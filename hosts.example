@@ -1,7 +1,7 @@
-[openbsd]
+[mastodon]
 mdon.tapenet.org
 
-[openbsd:vars]
+[mastodon:vars]
 mastodon_release=v2.1.3
 instance_name="mdon.tapenet.org"
 instance_paperclip_secret=

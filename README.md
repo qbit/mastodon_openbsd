@@ -3,6 +3,29 @@ mastodon_openbsd
 
 Playbooks / roles to bring an OpenBSD machine up as a Mastodon instance.
 
+# Using
+
+On your management machine:
+```
+doas pkg_add ansible
+git clone https://github.com/qbit/mastodon_openbsd.git
+cd mastodon_openbsd
+cp hosts.example hosts
+...modify hosts file. adding your instance name, etc...
+ansible-playbook site.yml
+```
+
+# Assumptions
+
+* Remote host has Python 2.7 installed (`pkg_add -z python-2.7`)
+* Remote host is running OpenBSD-current (snapshots)
+* /var has enough space for the entire Mastodon install (~250M)
+* You have pre-configured values for:
+    * PAPERCLIP_SECRET
+    * SECRET_KEY_BASE
+    * OTP_SECRET
+    * VAPID private and public key
+
 # Status
 
 What needs work:
