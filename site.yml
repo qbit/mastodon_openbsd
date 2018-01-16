@@ -3,6 +3,7 @@
 - name: Mastodon
   hosts: mastodon
   roles:
+    - { role: system, tags: ["system", "mastodon"] }
     - { role: redis, tags: ["redis", "mastodon"] }
     - { role: postgresql, tags: ["postgresql", "mastodon"] }
     - { role: mastodon, tags: ["mastodon"] }
