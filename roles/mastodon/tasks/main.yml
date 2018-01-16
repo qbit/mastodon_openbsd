@@ -1,71 +1,8 @@
 ---
 
-- name: Install pre-reqs
-  tags:
-    - system
-    - pkgs
-  package:
-    name: "{{ item }}"
-    state: installed
-  with_items:
-    - ImageMagick
-    - autoconf-2.69p2
-    - automake-1.15.1
-    - bwm-ng
-    - ffmpeg
-    - gcc
-    - git
-    - gnupg-2.2.3
-    - icu4c
-    - libidn
-    - node
-    - protobuf
-    - ruby24-addressable
-    - ruby24-bundler
-    - ruby24-nokogiri
-    - ruby24-puma
-    - ruby24-sanitize
-
-- name: Make python symlink
-  file:
-    state: link
-    src: /usr/local/bin/python2.7
-    dest: /usr/local/bin/python
-
-- name: Configure login.conf
-  tags:
-    - system
-    - login.conf
-  copy:
-    src: login.conf
-    dest: /etc/login.conf
-    owner: root
-    group: wheel
-    mode: 0644
-
-- name: Install "yarn" node.js package globally.
-  tags:
-    - system
-  npm:
-    name: yarn
-    global: yes
-
-- name: Add _mastodon group
-  group:
-    name: _mastodon
-    state: present
-
-- name: Add _mastodon user
-  tags:
-    - system
-  user:
-    name: _mastodon
-    shell: /bin/ksh
-    home: /var/www/_mastodon
-    state: present
-    group: _mastodon
-
 - name: Add profile for _mastodon
+  tags:
+    - profile
   copy:
     dest: /var/www/_mastodon/.profile
     owner: _mastodon
@@ -82,6 +19,9 @@
             DB_POOL=5
 
             alias bundle=/usr/local/bin/bundle24
+
+- name: reset ssh connection
+  meta: reset_connection
 
 - name: Create .gitconfig
   copy:

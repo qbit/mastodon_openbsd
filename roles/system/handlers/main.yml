@@ -1,0 +1,19 @@
+---
+
+- name: restart server
+  command: reboot
+  async: 0
+  poll: 0
+  ignore_errors: true
+
+- name: wait for server
+  become: False
+  local_action:
+    module: wait_for
+      host={{ inventory_hostname }}
+      port=22
+      delay=1
+      timeout=6000
+
+- name: clear unreachable
+  meta: clear_host_errors
