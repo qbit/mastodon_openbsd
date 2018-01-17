@@ -11,4 +11,4 @@
   service:
     name: smtpd
     enabled: true
-    state: started
+    state: restarted

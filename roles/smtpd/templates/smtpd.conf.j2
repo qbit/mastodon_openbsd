@@ -8,7 +8,7 @@ listen on lo0
 listen on {{ instance_name }} smtps pki {{ instance_name }} hostname {{ instance_name }}
 listen on {{ instance_name }} tls pki {{ instance_name }} hostname {{ instance_name }}
 
-table aliases db:/etc/mail/aliases.db
+table aliases file:/etc/mail/aliases
 
 accept from any for domain "{{ instance_name }}" alias <aliases> deliver to maildir
 accept from local for any relay
