@@ -9,3 +9,4 @@
     - { role: mastodon, tags: ["mastodon"] }
     - { role: acme, tags: ["acme", "mastodon"] }
     - { role: nginx, tags: ["nginx", "mastodon"] }
+    - { role: smtpd, tags: ["smtpd", "mastodon"] }

@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+
+pki {{ instance_name }} certificate "/etc/ssl/{{ instance_name }}.fullchain.pem"
+pki {{ instance_name }} key "/etc/ssl/private/{{ instance_name }}.key"
+
+listen on lo0
+
+listen on {{ instance_name }} smtps pki {{ instance_name }} hostname {{ instance_name }}
+listen on {{ instance_name }} tls pki {{ instance_name }} hostname {{ instance_name }}
+
+table aliases db:/etc/mail/aliases.db
+
+accept from any for domain "{{ instance_name }}" alias <aliases> deliver to maildir
+accept from local for any relay

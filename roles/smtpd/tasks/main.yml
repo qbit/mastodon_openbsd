@@ -1,0 +1,14 @@
+---
+
+- name: Copy up template
+  template:
+    src: smtpd.conf.j2
+    dest: /etc/mail/smtpd.conf
+    owner: root
+    group: wheel
+
+- name: Enable and start smtpd
+  service:
+    name: smtpd
+    enabled: true
+    state: started
