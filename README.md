@@ -17,14 +17,12 @@ ansible-playbook site.yml
 
 # Assumptions
 
-* Remote host has Python 2.7 installed (`pkg_add -z python-2.7`)
-* Remote host is running OpenBSD-current (snapshots)
-* /var has enough space for the entire Mastodon install (~250M)
-* You have pre-configured values for:
-    * PAPERCLIP_SECRET
-    * SECRET_KEY_BASE
-    * OTP_SECRET
-    * VAPID private and public key
+* Target machine is a *FRESH* install. If it isn't your configurations might get whacked!
+* Target machine has a large amount of RAM (Test instance has 8G).
+* Remote host has Python 2.7 installed (`pkg_add -z python-2.7`).
+* Remote host is running OpenBSD-current (snapshots).
+* /var has enough space for the entire Mastodon install (~250M).
+* `instance_name` is the FQDN of your desired Mastodon instance.
 
 # Status
 
@@ -34,11 +32,11 @@ ansible-playbook site.yml
 - [X] NGINX install / configuration
     - [X] Acme SSL certs with automatic renewal.
 - [X] Mastodon install / configuration
-    - [ ] Rake tasks
-    - [X] verification of code via PGP and git (fsckobjects)
-    - [ ] Pre-generating Secrets
-    - [ ] Pre-generating VAPID keys
+    - [X] Verification of code via PGP and git (fsckobjects)
+    - [X] Generation of Secrets
+    - [X] Generation of VAPID keys
     - [ ] RC scripts for clean startup
+- [X] Mail service
 
 # LICENSE
 

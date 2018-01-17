@@ -74,8 +74,8 @@
 
 - name: Copy rake helper script
   copy:
-    src: rake_runner.sh
-    dest: /var/www/_mastodon/rake_runner.sh
+    src: cmd_runner.sh
+    dest: /var/www/_mastodon/cmd_runner.sh
     mode: 0755
     owner: "_mastodon"
 
@@ -96,12 +96,13 @@
     - bundle
     - deps
   become: true
+  become_flags: '-l'
   become_method: su
   become_user: "_mastodon"
-  command: "yarn install --pure-lockfile"
+  shell: "/var/www/_mastodon/cmd_runner.sh yarn"
   args:
     chdir: /var/www/_mastodon/live
-    creates: /var/www/_mastodon/live/node_modules/
+    creates: /var/www/_mastodon/.yarn-run
 
 - name: Create mastodon env.production file
   tags:
@@ -115,12 +116,25 @@
     group: www
     mode: 0640
 
-- name: Copy rake helper script
-  copy:
-    src: rake_runner.sh
-    dest: /var/www/_mastodon/rake_runner.sh
-    mode: 0755
-    owner: "_mastodon"
+- name: Generate secrets
+  become: true
+  become_flags: '-l'
+  become_method: su
+  become_user: "_mastodon"
+  shell: "/var/www/_mastodon/cmd_runner.sh secrets >> /var/www/_mastodon/live/.env.production"
+  args:
+    chdir: /var/www/_mastodon/live
+    creates: /var/www/_mastodon/.secrets
+
+- name: Generate pubkeys
+  become: true
+  become_flags: '-l'
+  become_method: su
+  become_user: "_mastodon"
+  shell: "/var/www/_mastodon/cmd_runner.sh pubkeys >> /var/www/_mastodon/live/.env.production"
+  args:
+    chdir: /var/www/_mastodon/live
+    creates: /var/www/_mastodon/.pubkeys
 
 - name: Copy tmux start script
   copy:
@@ -135,18 +149,19 @@
   become: true
   become_method: su
   become_user: "_mastodon"
-  shell: "/var/www/_mastodon/rake_runner.sh db"
+  shell: "/var/www/_mastodon/cmd_runner.sh db"
   args:
     chdir: /var/www/_mastodon/live
-    creates: /var/www/_mastodon/db
+    creates: /var/www/_mastodon/.db-run
 
 - name: Setup JS / CSS
   tags:
     - cssjs
   become: true
+  become_flags: '-l'
   become_method: su
   become_user: "_mastodon"
-  shell: "/var/www/_mastodon/rake_runner.sh cssjs"
+  shell: "/var/www/_mastodon/cmd_runner.sh cssjs"
   ignore_errors: True
   args:
     chdir: /var/www/_mastodon/live

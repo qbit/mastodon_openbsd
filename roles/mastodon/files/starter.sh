@@ -16,3 +16,4 @@ tmux select-pan -t 3
 tmux send-keys "NODE_ENV=production PORT=4000 npm run start" C-m
 
 tmux -2 attach-session -t "${session}"
+tmux select-layout main-horizontal

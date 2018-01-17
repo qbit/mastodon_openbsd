@@ -26,11 +26,14 @@
     - ruby24-puma
     - ruby24-sanitize
 
-- name: Make python symlink
+- name: Make symlinks
   file:
     state: link
-    src: /usr/local/bin/python2.7
-    dest: /usr/local/bin/python
+    src: "/usr/local/bin/{{ item.src }}"
+    dest: "/usr/local/bin/{{ item.dest }}"
+  with_items:
+    - { src: "python2.7", dest: "python" }
+    - { src: "bundle24", dest: "bundle" }
 
 - name: Configure login.conf
   tags:
