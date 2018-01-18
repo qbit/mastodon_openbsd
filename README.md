@@ -3,7 +3,7 @@ mastodon_openbsd
 
 Playbooks / roles to bring an OpenBSD machine up as a Mastodon instance.
 
-[![asciicast](https://asciinema.org/a/157827.png)](https://asciinema.org/a/157827?speed=5)
+[![asciicast](https://asciinema.org/a/Rm0NmOaOutxO28HeRWoj5T1QD.png)](https://asciinema.org/a/Rm0NmOaOutxO28HeRWoj5T1QD)
 
 # Using
 
