@@ -3,6 +3,8 @@ mastodon_openbsd
 
 Playbooks / roles to bring an OpenBSD machine up as a Mastodon instance.
 
+[![asciicast](https://asciinema.org/a/157827.png)](https://asciinema.org/a/157827?speed=3)
+
 # Using
 
 On your management machine:
