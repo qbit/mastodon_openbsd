@@ -15,7 +15,7 @@
     - ffmpeg
     - gcc
     - git
-    - gnupg-2.2.3
+    - gnupg-2.2.4
     - icu4c
     - libidn
     - node
