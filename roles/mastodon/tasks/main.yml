@@ -12,8 +12,8 @@
             export PATH HOME TERM
             export CC=/usr/bin/clang
             export CXX=/usr/bin/clang++
-            #export AUTOCONF_VERSION=2.69
-            #export AUTOMAKE_VERSION=1.15
+            export AUTOCONF_VERSION=2.69
+            export AUTOMAKE_VERSION=1.15
             export RAIL_ENV=production
             export NODE_ENV=production
             export DB_POOL=5
