@@ -117,6 +117,10 @@
     mode: 0640
 
 - name: Generate secrets
+  tags:
+    - secrets
+    - env
+    - rake
   become: true
   become_flags: '-l'
   become_method: su
@@ -127,6 +131,10 @@
     creates: /var/www/_mastodon/.secrets
 
 - name: Generate pubkeys
+  tags:
+    - pubkeys
+    - env
+    - rake
   become: true
   become_flags: '-l'
   become_method: su
